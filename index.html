@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD Architecture Selection Framework</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0d1117;
+    --surface:   #161b22;
+    --border:    #21262d;
+    --border-hi: #30363d;
+    --text:      #e6edf3;
+    --muted:     #7d8590;
+    --accent:    #58a6ff;
+    --accent2:   #3fb950;
+    --warn:      #d29922;
+    --danger:    #f85149;
+
+    /* outcome colors */
+    --col-modular:  #388bfd;
+    --col-e2e:      #3fb950;
+    --col-hybrid:   #a371f7;
+    --col-rl:       #f78166;
+
+    --radius: 6px;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 28px 40px 24px;
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(88,166,255,.08);
+    border: 1px solid rgba(88,166,255,.25);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 6px;
+    display: inline-block;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -.02em;
+  }
+  header p {
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 300;
+    margin-top: 4px;
+    max-width: 520px;
+  }
+  .header-meta {
+    margin-left: auto;
+    text-align: right;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  /* ── LAYOUT ── */
+  .shell {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* ── DIMENSION TABS ── */
+  .dim-nav {
+    display: flex;
+    gap: 4px;
+    padding: 24px 40px 0;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
+  .dim-tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: var(--radius) var(--radius) 0 0;
+    cursor: pointer;
+    color: var(--muted);
+    background: transparent;
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .dim-tab:hover { color: var(--text); border-color: var(--border-hi); }
+  .dim-tab.active { color: var(--text); background: var(--surface); border-color: var(--border-hi); }
+
+  /* ── MAIN PANEL ── */
+  .main-panel {
+    border: 1px solid var(--border-hi);
+    border-radius: 0 var(--radius) var(--radius) var(--radius);
+    background: var(--surface);
+    padding: 32px;
+    margin-top: 0;
+  }
+
+  /* ── DIMENSION CONTENT ── */
+  .dim-content { display: none; }
+  .dim-content.active { display: block; }
+
+  .dim-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .dim-icon {
+    width: 38px; height: 38px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .dim-header h2 { font-size: 16px; font-weight: 600; }
+  .dim-header p { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    transition: border-color .2s;
+  }
+  .q-card:hover { border-color: var(--border-hi); }
+  .q-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .q-sub {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* ── OPTIONS ── */
+  .options { display: flex; flex-direction: column; gap: 8px; }
+  .opt-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    text-align: left;
+    font-family: var(--sans);
+    font-size: 13px;
+    transition: all .15s;
+    width: 100%;
+  }
+  .opt-btn:hover { border-color: var(--accent); background: rgba(88,166,255,.06); }
+  .opt-btn.selected { border-color: var(--accent); background: rgba(88,166,255,.10); }
+  .opt-btn.selected .opt-dot { background: var(--accent); }
+  .opt-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-hi);
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+  .opt-signal {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 10px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .sig-modular  { background: rgba(56,139,253,.12); color: #388bfd; }
+  .sig-e2e      { background: rgba(63,185,80,.12);  color: #3fb950; }
+  .sig-hybrid   { background: rgba(163,113,247,.12);color: #a371f7; }
+  .sig-rl       { background: rgba(247,129,102,.12);color: #f78166; }
+  .sig-neutral  { background: rgba(125,133,144,.1); color: #7d8590; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    border-left: 1px solid var(--border);
+    padding: 28px 0 0 28px;
+  }
+
+  .score-header {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  /* ── SCORE BARS ── */
+  .arch-score {
+    margin-bottom: 18px;
+  }
+  .arch-score-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+  .arch-name {
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arch-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+  .arch-val {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .bar-track {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width .4s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ── RECOMMENDATION BOX ── */
+  .rec-box {
+    margin-top: 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .rec-header {
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .rec-body { padding: 14px; }
+  .rec-arch {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .rec-desc {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin-bottom: 12px;
+  }
+
+  /* ── RATIONALE CHIPS ── */
+  .rationale-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .rationale-item {
+    font-size: 11px;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .rationale-item::before {
+    content: '→';
+    font-family: var(--mono);
+    color: var(--accent);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── PROPERTIES TABLE ── */
+  .prop-table {
+    margin-top: 14px;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .prop-table td {
+    font-size: 11px;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .prop-table td:first-child { color: var(--muted); width: 50%; }
+  .prop-table td:last-child { font-weight: 600; text-align: right; font-family: var(--mono); }
+  .prop-good  { color: var(--accent2); }
+  .prop-mid   { color: var(--warn); }
+  .prop-poor  { color: var(--danger); }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    margin-top: 28px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .progress-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width .4s;
+  }
+
+  /* ── RESET ── */
+  .reset-btn {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: .06em;
+  }
+  .reset-btn:hover { border-color: var(--border-hi); color: var(--text); }
+
+  /* ── LEGEND ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  /* ── FRAMEWORK SUMMARY TAB ── */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  .arch-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    background: var(--bg);
+  }
+  .arch-card-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .arch-card ul {
+    list-style: none;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .arch-card ul li::before {
+    content: '+ ';
+    font-family: var(--mono);
+  }
+  .arch-card ul.cons li::before {
+    content: '− ';
+    color: var(--danger);
+  }
+  .arch-card ul.pros li::before { color: var(--accent2); }
+
+  .use-case-block {
+    margin-top: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .use-case-row {
+    display: grid;
+    grid-template-columns: 180px 1fr 120px;
+    padding: 10px 14px;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    gap: 12px;
+  }
+  .use-case-row:last-child { border-bottom: none; }
+  .use-case-row.header {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: rgba(255,255,255,.02);
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+  }
+  .badge-modular { background: rgba(56,139,253,.12); color: #388bfd; }
+  .badge-e2e     { background: rgba(63,185,80,.12);  color: #3fb950; }
+  .badge-hybrid  { background: rgba(163,113,247,.12);color: #a371f7; }
+  .badge-rl      { background: rgba(247,129,102,.12);color: #f78166; }
+
+  @media (max-width: 860px) {
+    .shell { grid-template-columns: 1fr; }
+    .sidebar { border-left: none; border-top: 1px solid var(--border); padding: 24px 0 0; margin-top: 24px; }
+    header, .dim-nav, .shell { padding-left: 20px; padding-right: 20px; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .use-case-row { grid-template-columns: 1fr 1fr; }
+    .use-case-row > :nth-child(2) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-tag">ARCHMENTOR · Research Tool</div>
+    <h1>Autonomous Driving Architecture<br>Selection Framework</h1>
+    <p>A structured multi-dimensional decision tool for selecting between Modular, End-to-End, Hybrid, and RL-based architectures.</p>
+  </div>
+  <div class="header-meta">
+    Kapse, K.B. (2024)<br>
+    THI · Autonomous Systems<br>
+    v1.0 · 4 Dimensions · 12 Criteria
+  </div>
+</header>
+
+<!-- Dimension tabs -->
+<div class="dim-nav">
+  <button class="dim-tab active" onclick="switchDim(0)">① Safety &amp; Regulation</button>
+  <button class="dim-tab" onclick="switchDim(1)">② Environment</button>
+  <button class="dim-tab" onclick="switchDim(2)">③ Data &amp; Resources</button>
+  <button class="dim-tab" onclick="switchDim(3)">④ Deployment</button>
+  <button class="dim-tab" onclick="switchDim(4)">⑤ Summary</button>
+</div>
+
+<div class="shell">
+  <div class="main-panel">
+
+    <!-- DIM 0: Safety & Regulation -->
+    <div class="dim-content active" id="dim-0">
+      <div class="dim-header">
+        <div class="dim-icon" style="background:rgba(248,81,73,.1)">🛡️</div>
+        <div>
+          <h2>Dimension 1 - Safety &amp; Regulatory Compliance</h2>
+          <p>ISO 26262, SOTIF, UNECE WP.29 traceability requirements</p>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q1 · Interpretability</div>
+        <div class="q-text">Is the ability to explain and trace system decisions a hard requirement?</div>
+        <div class="q-sub">Regulatory standards like ISO 26262 and UNECE WP.29 require demonstrable fault traceability. Court or liability contexts may also demand explainable decisions.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(0,0,{modular:3,e2e:-2,hybrid:1,rl:-1})">
+            <span class="opt-dot"></span>Yes - full traceability required (safety-critical, certified product)
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(0,0,{modular:1,e2e:0,hybrid:2,rl:0})">
+            <span class="opt-dot"></span>Partial - explainability desirable but not legally mandated
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(0,0,{modular:0,e2e:3,hybrid:1,rl:2})">
+            <span class="opt-dot"></span>No - performance is the priority, black-box acceptable
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q2 · Failure Analysis</div>
+        <div class="q-text">How important is the ability to isolate and debug failure modes in production?</div>
+        <div class="q-sub">Modular systems allow per-component debugging. End-to-end systems require activation analysis (Grad-CAM, saliency maps) which is less precise.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(0,1,{modular:3,e2e:-1,hybrid:2,rl:-1})">
+            <span class="opt-dot"></span>Critical - field failures must be root-caused quickly
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(0,1,{modular:1,e2e:1,hybrid:2,rl:1})">
+            <span class="opt-dot"></span>Moderate - post-hoc analysis is acceptable
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(0,1,{modular:-1,e2e:2,hybrid:1,rl:2})">
+            <span class="opt-dot"></span>Low - aggregate performance metrics are sufficient
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q3 · Redundancy</div>
+        <div class="q-text">Does the system require independent redundant checks before actuation?</div>
+        <div class="q-sub">Automotive safety integrity levels (ASIL-D) often mandate that no single point of failure can cause a hazard. Modular systems can insert watchdog checks between components.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(0,2,{modular:3,e2e:-2,hybrid:2,rl:-1})">
+            <span class="opt-dot"></span>Yes - ASIL-C/D or equivalent mandatory
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(0,2,{modular:1,e2e:0,hybrid:2,rl:0})">
+            <span class="opt-dot"></span>Preferred but not certified
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(0,2,{modular:0,e2e:2,hybrid:1,rl:2})">
+            <span class="opt-dot"></span>No redundancy certification required (research / prototype)
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIM 1: Environment -->
+    <div class="dim-content" id="dim-1">
+      <div class="dim-header">
+        <div class="dim-icon" style="background:rgba(63,185,80,.1)">🌍</div>
+        <div>
+          <h2>Dimension 2 - Operating Environment</h2>
+          <p>Scenario structure, domain variability, and edge-case frequency</p>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q4 · Environment Structure</div>
+        <div class="q-text">How structured and predictable is the primary operating environment?</div>
+        <div class="q-sub">Structured environments (highways, airport runways, factory floors) suit rule-based modular logic. Unstructured environments (city intersections, construction zones) benefit from learned flexibility.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(1,0,{modular:3,e2e:0,hybrid:1,rl:0})">
+            <span class="opt-dot"></span>Highly structured (highway, controlled-access road, industrial site)
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(1,0,{modular:1,e2e:2,hybrid:3,rl:2})">
+            <span class="opt-dot"></span>Mixed (suburban roads, campus, low-speed urban)
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(1,0,{modular:-1,e2e:3,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>Highly unstructured (dense urban, off-road, adverse weather)
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q5 · Edge-Case Frequency</div>
+        <div class="q-text">How often will the system encounter rare or out-of-distribution scenarios?</div>
+        <div class="q-sub">Modular systems struggle to generalize beyond programmed rules. End-to-end and hybrid systems can generalize if trained on diverse data.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(1,1,{modular:2,e2e:1,hybrid:1,rl:1})">
+            <span class="opt-dot"></span>Rarely - well-defined operational design domain (ODD)
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(1,1,{modular:0,e2e:2,hybrid:3,rl:2})">
+            <span class="opt-dot"></span>Sometimes - broad ODD with occasional novel scenarios
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(1,1,{modular:-2,e2e:3,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>Frequently - open-ended, long-tail distribution expected
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q6 · Multi-Agent Density</div>
+        <div class="q-text">What is the density and unpredictability of other agents (pedestrians, cyclists, vehicles)?</div>
+        <div class="q-sub">High multi-agent density requires sophisticated prediction. End-to-end models can implicitly encode agent interactions; modular systems need explicit prediction modules.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(1,2,{modular:2,e2e:1,hybrid:2,rl:1})">
+            <span class="opt-dot"></span>Low - sparse traffic, predictable agent behavior
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(1,2,{modular:1,e2e:2,hybrid:3,rl:2})">
+            <span class="opt-dot"></span>Medium - moderate traffic with some pedestrian interaction
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(1,2,{modular:0,e2e:3,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>High - dense urban with cyclists, pedestrians, erratic behavior
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIM 2: Data & Resources -->
+    <div class="dim-content" id="dim-2">
+      <div class="dim-header">
+        <div class="dim-icon" style="background:rgba(210,153,34,.1)">🗄️</div>
+        <div>
+          <h2>Dimension 3 - Data &amp; Computational Resources</h2>
+          <p>Training data availability, labeling budget, and compute constraints</p>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q7 · Labeled Data Availability</div>
+        <div class="q-text">How much labeled training data is available for the target domain?</div>
+        <div class="q-sub">E2E imitation learning demands large, diverse, and well-labeled datasets. Modular systems can leverage pre-trained components and transfer learning more efficiently.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(2,0,{modular:2,e2e:-1,hybrid:1,rl:2})">
+            <span class="opt-dot"></span>Scarce - limited domain-specific labeled data (&lt;10k scenarios)
+            <span class="opt-signal sig-modular">→ Modular / RL</span>
+          </button>
+          <button class="opt-btn" onclick="answer(2,0,{modular:1,e2e:2,hybrid:3,rl:2})">
+            <span class="opt-dot"></span>Moderate - reasonable dataset, some coverage gaps
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(2,0,{modular:0,e2e:3,hybrid:2,rl:1})">
+            <span class="opt-dot"></span>Abundant - large-scale labeled dataset available (&gt;100k scenarios)
+            <span class="opt-signal sig-e2e">→ E2E</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q8 · Simulation Access</div>
+        <div class="q-text">Is high-fidelity simulation (e.g. CARLA, LGSVL) available for training?</div>
+        <div class="q-sub">RL-based and E2E methods depend heavily on simulation for safe exploration. Without simulation, RL is impractical. Modular systems are less reliant on simulation.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(2,1,{modular:1,e2e:0,hybrid:1,rl:-2})">
+            <span class="opt-dot"></span>No - real-world data only
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(2,1,{modular:1,e2e:1,hybrid:2,rl:1})">
+            <span class="opt-dot"></span>Limited - basic simulation available, limited fidelity
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(2,1,{modular:0,e2e:2,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>Full - photorealistic simulator with sensor models available
+            <span class="opt-signal sig-rl">→ RL / E2E</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q9 · Compute Budget</div>
+        <div class="q-text">What is the available onboard compute for inference?</div>
+        <div class="q-sub">E2E models (especially transformer-based) require significant GPU/NPU resources at inference. Lightweight modular systems can run on embedded processors (NVIDIA Jetson, Mobileye EyeQ).</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(2,2,{modular:3,e2e:-1,hybrid:1,rl:-1})">
+            <span class="opt-dot"></span>Constrained - embedded system (≤15W, no discrete GPU)
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(2,2,{modular:1,e2e:2,hybrid:3,rl:1})">
+            <span class="opt-dot"></span>Moderate - automotive-grade SoC (NVIDIA Orin, Qualcomm Ride)
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(2,2,{modular:0,e2e:3,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>High - full server-grade GPU available (data-center or research)
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIM 3: Deployment -->
+    <div class="dim-content" id="dim-3">
+      <div class="dim-header">
+        <div class="dim-icon" style="background:rgba(163,113,247,.1)">🚀</div>
+        <div>
+          <h2>Dimension 4 - Deployment &amp; Operational Context</h2>
+          <p>Development maturity, update frequency, and team expertise</p>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q10 · Development Stage</div>
+        <div class="q-text">What is the current development stage of the system?</div>
+        <div class="q-sub">Research and proof-of-concept stages allow more experimental architectures. Production systems require battle-tested, certifiable approaches.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(3,0,{modular:1,e2e:3,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>Research / proof-of-concept - exploring capabilities
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+          <button class="opt-btn" onclick="answer(3,0,{modular:2,e2e:1,hybrid:3,rl:1})">
+            <span class="opt-dot"></span>Pre-production - pilot deployment, limited fleet
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(3,0,{modular:3,e2e:-1,hybrid:2,rl:-1})">
+            <span class="opt-dot"></span>Production - full-scale certified deployment
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q11 · Update Cadence</div>
+        <div class="q-text">How frequently will the system need to be updated or retrained?</div>
+        <div class="q-sub">E2E systems require full retraining cycles. Modular systems allow targeted component updates (e.g., swap perception model) without full revalidation of the stack.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(3,1,{modular:3,e2e:0,hybrid:2,rl:0})">
+            <span class="opt-dot"></span>Infrequent - stable deployment, updates via OTA patches
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(3,1,{modular:1,e2e:2,hybrid:3,rl:2})">
+            <span class="opt-dot"></span>Periodic - quarterly retraining with new data
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+          <button class="opt-btn" onclick="answer(3,1,{modular:0,e2e:3,hybrid:2,rl:3})">
+            <span class="opt-dot"></span>Continuous - online learning or frequent full retrains
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="q-card">
+        <div class="q-label">Q12 · Team Expertise</div>
+        <div class="q-text">What is the primary expertise of the engineering team?</div>
+        <div class="q-sub">Modular systems map well to traditional robotics/controls expertise. E2E systems require deep learning and MLOps infrastructure. Hybrid requires both.</div>
+        <div class="options">
+          <button class="opt-btn" onclick="answer(3,2,{modular:3,e2e:0,hybrid:1,rl:0})">
+            <span class="opt-dot"></span>Controls &amp; robotics (ROS, path planning, classical CV)
+            <span class="opt-signal sig-modular">→ Modular</span>
+          </button>
+          <button class="opt-btn" onclick="answer(3,2,{modular:1,e2e:3,hybrid:2,rl:2})">
+            <span class="opt-dot"></span>Deep learning &amp; MLOps (PyTorch, large-scale training pipelines)
+            <span class="opt-signal sig-e2e">→ E2E / RL</span>
+          </button>
+          <button class="opt-btn" onclick="answer(3,2,{modular:2,e2e:2,hybrid:3,rl:2})">
+            <span class="opt-dot"></span>Cross-functional team with both capabilities
+            <span class="opt-signal sig-hybrid">→ Hybrid</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DIM 4: Summary -->
+    <div class="dim-content" id="dim-4">
+      <div class="dim-header">
+        <div class="dim-icon" style="background:rgba(88,166,255,.1)">📋</div>
+        <div>
+          <h2>Framework Reference - Architecture Properties</h2>
+          <p>Quick-reference comparison across all four paradigms</p>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="arch-card" style="border-color: rgba(56,139,253,.3)">
+          <div class="arch-card-title" style="color:#388bfd">
+            <span style="background:rgba(56,139,253,.15);padding:2px 8px;border-radius:4px;font-size:12px">MOD</span>
+            Modular Architecture
+          </div>
+          <ul class="pros">
+            <li>Full interpretability per module</li>
+            <li>ISO 26262 / SOTIF compatible</li>
+            <li>Independent component updates</li>
+            <li>Embedded compute friendly</li>
+            <li>Leverages domain expertise</li>
+          </ul>
+          <ul class="cons" style="margin-top:8px">
+            <li>Error propagation across modules</li>
+            <li>Limited generalization</li>
+            <li>Complex inter-module interfaces</li>
+            <li>Brittle in unstructured scenes</li>
+          </ul>
+        </div>
+
+        <div class="arch-card" style="border-color: rgba(63,185,80,.3)">
+          <div class="arch-card-title" style="color:#3fb950">
+            <span style="background:rgba(63,185,80,.15);padding:2px 8px;border-radius:4px;font-size:12px">E2E</span>
+            End-to-End (IL)
+          </div>
+          <ul class="pros">
+            <li>Simple unified pipeline</li>
+            <li>Strong generalization with data</li>
+            <li>No handcrafted feature engineering</li>
+            <li>Scales with dataset size</li>
+          </ul>
+          <ul class="cons" style="margin-top:8px">
+            <li>Black-box, low interpretability</li>
+            <li>Covariate shift vulnerability</li>
+            <li>Requires massive labeled datasets</li>
+            <li>Difficult to certify</li>
+            <li>Overfitting in sparse data regimes</li>
+          </ul>
+        </div>
+
+        <div class="arch-card" style="border-color: rgba(247,129,102,.3)">
+          <div class="arch-card-title" style="color:#f78166">
+            <span style="background:rgba(247,129,102,.15);padding:2px 8px;border-radius:4px;font-size:12px">RL</span>
+            Reinforcement Learning
+          </div>
+          <ul class="pros">
+            <li>No labeled human data required</li>
+            <li>Online self-improvement</li>
+            <li>Discovers non-human strategies</li>
+            <li>Well-suited to continuous control</li>
+          </ul>
+          <ul class="cons" style="margin-top:8px">
+            <li>Requires high-fidelity simulation</li>
+            <li>Reward function design is non-trivial</li>
+            <li>Large sim-to-real gap</li>
+            <li>Sample inefficient training</li>
+            <li>Unsafe exploration in real-world</li>
+          </ul>
+        </div>
+
+        <div class="arch-card" style="border-color: rgba(163,113,247,.3)">
+          <div class="arch-card-title" style="color:#a371f7">
+            <span style="background:rgba(163,113,247,.15);padding:2px 8px;border-radius:4px;font-size:12px">HYB</span>
+            Hybrid Architecture
+          </div>
+          <ul class="pros">
+            <li>Interpretable perception + planning</li>
+            <li>Adaptive data-driven path planning</li>
+            <li>Balance of safety &amp; flexibility</li>
+            <li>Validated in CARLA 2023</li>
+          </ul>
+          <ul class="cons" style="margin-top:8px">
+            <li>Higher integration complexity</li>
+            <li>Requires cross-functional team</li>
+            <li>Interface design non-trivial</li>
+            <li>Larger codebase to maintain</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="use-case-block">
+        <div class="use-case-row header">
+          <span>Scenario</span>
+          <span>Key Constraint</span>
+          <span>Recommendation</span>
+        </div>
+        <div class="use-case-row">
+          <span>Highway ADAS (L2/L3)</span>
+          <span>ISO 26262 ASIL-D, structured ODD</span>
+          <span><span class="badge badge-modular">Modular</span></span>
+        </div>
+        <div class="use-case-row">
+          <span>Urban robotaxi (L4)</span>
+          <span>Dense agents, diverse scenes</span>
+          <span><span class="badge badge-hybrid">Hybrid</span></span>
+        </div>
+        <div class="use-case-row">
+          <span>Research / simulation</span>
+          <span>Exploration, no certification</span>
+          <span><span class="badge badge-rl">RL / E2E</span></span>
+        </div>
+        <div class="use-case-row">
+          <span>Off-road / mining</span>
+          <span>Unstructured, no maps</span>
+          <span><span class="badge badge-e2e">E2E</span></span>
+        </div>
+        <div class="use-case-row">
+          <span>Geofenced campus shuttle</span>
+          <span>Moderate ODD, limited data</span>
+          <span><span class="badge badge-hybrid">Hybrid</span></span>
+        </div>
+        <div class="use-case-row">
+          <span>Autonomous racing</span>
+          <span>Max performance, simulation-heavy</span>
+          <span><span class="badge badge-rl">RL</span></span>
+        </div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#388bfd"></div>Modular</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#3fb950"></div>End-to-End (IL)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f78166"></div>Reinforcement Learning</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#a371f7"></div>Hybrid</div>
+      </div>
+    </div>
+
+  </div><!-- /main-panel -->
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="score-header">Live Scoring</div>
+
+    <div class="arch-score">
+      <div class="arch-score-top">
+        <div class="arch-name"><div class="arch-dot" style="background:#388bfd"></div>Modular</div>
+        <div class="arch-val" id="val-modular">0</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bar-modular" style="width:0%;background:#388bfd"></div></div>
+    </div>
+
+    <div class="arch-score">
+      <div class="arch-score-top">
+        <div class="arch-name"><div class="arch-dot" style="background:#3fb950"></div>End-to-End</div>
+        <div class="arch-val" id="val-e2e">0</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bar-e2e" style="width:0%;background:#3fb950"></div></div>
+    </div>
+
+    <div class="arch-score">
+      <div class="arch-score-top">
+        <div class="arch-name"><div class="arch-dot" style="background:#f78166"></div>Reinforcement L.</div>
+        <div class="arch-val" id="val-rl">0</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bar-rl" style="width:0%;background:#f78166"></div></div>
+    </div>
+
+    <div class="arch-score">
+      <div class="arch-score-top">
+        <div class="arch-name"><div class="arch-dot" style="background:#a371f7"></div>Hybrid</div>
+        <div class="arch-val" id="val-hybrid">0</div>
+      </div>
+      <div class="bar-track"><div class="bar-fill" id="bar-hybrid" style="width:0%;background:#a371f7"></div></div>
+    </div>
+
+    <!-- Recommendation box -->
+    <div class="rec-box">
+      <div class="rec-header">Recommendation</div>
+      <div class="rec-body">
+        <div class="rec-arch" id="rec-arch" style="color:var(--muted)">-</div>
+        <div class="rec-desc" id="rec-desc">Answer questions to generate a recommendation.</div>
+        <div class="rationale-list" id="rec-rationale"></div>
+        <table class="prop-table" id="rec-props" style="display:none">
+          <tr><td>Interpretability</td><td class="prop-good" id="prop-interp">-</td></tr>
+          <tr><td>Scalability</td><td id="prop-scale">-</td></tr>
+          <tr><td>Data Demand</td><td id="prop-data">-</td></tr>
+          <tr><td>Cert. Readiness</td><td id="prop-cert">-</td></tr>
+          <tr><td>Compute Cost</td><td id="prop-compute">-</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-bar">
+      <div class="progress-label">
+        <span>Questions answered</span>
+        <span id="prog-label">0 / 12</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+
+    <button class="reset-btn" onclick="resetAll()">↺ Reset all answers</button>
+  </div>
+</div>
+
+<script>
+  // State
+  const scores = { modular: 0, e2e: 0, hybrid: 0, rl: 0 };
+  const answered = {}; // "dim-q" -> delta applied
+
+  const archData = {
+    modular: {
+      name: 'Modular Architecture',
+      desc: 'Your requirements align with a modular pipeline. Prioritise interpretable, independently-verifiable components connected via well-defined interfaces.',
+      rationale: [
+        'Safety/certification requirements favour traceable module boundaries',
+        'Structured environment suits rule-based planning and control',
+        'Independent module updates reduce revalidation overhead'
+      ],
+      props: {
+        interp: ['High','prop-good'], scale: ['Medium','prop-mid'],
+        data: ['Low','prop-good'], cert: ['High','prop-good'], compute: ['Low','prop-good']
+      }
+    },
+    e2e: {
+      name: 'End-to-End Learning',
+      desc: 'Your requirements suit an end-to-end imitation learning approach. Invest in large, diverse training datasets and robust evaluation benchmarks.',
+      rationale: [
+        'Performance-first context tolerates black-box decision-making',
+        'Abundant data enables strong generalisation across scenarios',
+        'Simplified pipeline reduces integration complexity'
+      ],
+      props: {
+        interp: ['Low','prop-poor'], scale: ['High','prop-good'],
+        data: ['High','prop-poor'], cert: ['Low','prop-poor'], compute: ['High','prop-poor']
+      }
+    },
+    rl: {
+      name: 'Reinforcement Learning',
+      desc: 'Your requirements suit deep RL training in simulation. Invest in high-fidelity sim environments and carefully designed reward functions to minimise sim-to-real gap.',
+      rationale: [
+        'No labelled human demonstrations required',
+        'High-fidelity simulation available for safe exploration',
+        'Continuous control output suits RL policy optimisation'
+      ],
+      props: {
+        interp: ['Low','prop-poor'], scale: ['High','prop-good'],
+        data: ['Sim-only','prop-mid'], cert: ['Low','prop-poor'], compute: ['Very High','prop-poor']
+      }
+    },
+    hybrid: {
+      name: 'Hybrid Architecture',
+      desc: 'Your requirements balance interpretability with adaptability. Use modular components for perception and control; apply end-to-end learning for path planning.',
+      rationale: [
+        'Modular perception satisfies partial traceability requirements',
+        'E2E path planning handles dynamic/unstructured scenarios',
+        'Cross-functional team can maintain both components'
+      ],
+      props: {
+        interp: ['Medium','prop-mid'], scale: ['High','prop-good'],
+        data: ['Medium','prop-mid'], cert: ['Medium','prop-mid'], compute: ['Medium','prop-mid']
+      }
+    }
+  };
+
+  function answer(dim, q, delta) {
+    const key = `${dim}-${q}`;
+
+    // Undo previous answer for this question
+    if (answered[key]) {
+      const prev = answered[key];
+      for (const k in prev) scores[k] -= prev[k];
+    }
+
+    // Apply new delta
+    for (const k in delta) scores[k] += delta[k];
+    answered[key] = { ...delta };
+
+    // Update button states in this question card
+    const card = event.currentTarget.closest('.q-card');
+    card.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    event.currentTarget.classList.add('selected');
+
+    updateSidebar();
+  }
+
+  function updateSidebar() {
+    const total = Object.keys(answered).length;
+    const maxPossible = 36; // 12 questions × max ~3 pts
+
+    // Clamp to 0 minimum for display
+    const display = {};
+    for (const k in scores) display[k] = Math.max(0, scores[k]);
+    const maxVal = Math.max(...Object.values(display), 1);
+
+    for (const k in display) {
+      document.getElementById(`val-${k}`).textContent = scores[k];
+      document.getElementById(`bar-${k}`).style.width = (display[k] / maxVal * 100) + '%';
+    }
+
+    // Progress
+    document.getElementById('prog-label').textContent = `${total} / 12`;
+    document.getElementById('prog-fill').style.width = (total / 12 * 100) + '%';
+
+    // Recommendation (after at least 3 answers)
+    if (total >= 3) {
+      const best = Object.entries(scores).sort((a,b) => b[1]-a[1])[0][0];
+      const d = archData[best];
+      const colors = { modular:'#388bfd', e2e:'#3fb950', rl:'#f78166', hybrid:'#a371f7' };
+
+      document.getElementById('rec-arch').textContent = d.name;
+      document.getElementById('rec-arch').style.color = colors[best];
+      document.getElementById('rec-desc').textContent = d.desc;
+
+      const ratEl = document.getElementById('rec-rationale');
+      ratEl.innerHTML = d.rationale.map(r => `<div class="rationale-item">${r}</div>`).join('');
+
+      const propsEl = document.getElementById('rec-props');
+      propsEl.style.display = 'table';
+      const p = d.props;
+      const setProp = (id, val, cls) => {
+        const el = document.getElementById(id);
+        el.textContent = val;
+        el.className = cls;
+      };
+      setProp('prop-interp', p.interp[0], p.interp[1]);
+      setProp('prop-scale',  p.scale[0],  p.scale[1]);
+      setProp('prop-data',   p.data[0],   p.data[1]);
+      setProp('prop-cert',   p.cert[0],   p.cert[1]);
+      setProp('prop-compute',p.compute[0],p.compute[1]);
+    }
+  }
+
+  function switchDim(idx) {
+    document.querySelectorAll('.dim-tab').forEach((t,i) => t.classList.toggle('active', i===idx));
+    document.querySelectorAll('.dim-content').forEach((c,i) => c.classList.toggle('active', i===idx));
+  }
+
+  function resetAll() {
+    for (const k in scores) scores[k] = 0;
+    for (const k in answered) delete answered[k];
+    document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+    for (const k in scores) {
+      document.getElementById(`val-${k}`).textContent = '0';
+      document.getElementById(`bar-${k}`).style.width = '0%';
+    }
+    document.getElementById('rec-arch').textContent = '-';
+    document.getElementById('rec-arch').style.color = 'var(--muted)';
+    document.getElementById('rec-desc').textContent = 'Answer questions to generate a recommendation.';
+    document.getElementById('rec-rationale').innerHTML = '';
+    document.getElementById('rec-props').style.display = 'none';
+    document.getElementById('prog-label').textContent = '0 / 12';
+    document.getElementById('prog-fill').style.width = '0%';
+  }
+</script>
+</body>
+</html>

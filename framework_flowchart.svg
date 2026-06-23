@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 1680" width="860" height="1680"
+     font-family="'Times New Roman', Times, serif">
+
+  <!-- ═══════════════════════════════════════════════
+       DEFS: markers, patterns, filters
+  ═══════════════════════════════════════════════ -->
+  <defs>
+    <!-- Arrow marker -->
+    <marker id="arrow" markerWidth="9" markerHeight="7"
+            refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#222"/>
+    </marker>
+    <marker id="arrow-sm" markerWidth="7" markerHeight="6"
+            refX="6" refY="3" orient="auto">
+      <polygon points="0 0, 7 3, 0 6" fill="#444"/>
+    </marker>
+    <marker id="arrow-out" markerWidth="9" markerHeight="7"
+            refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#111"/>
+    </marker>
+
+    <!-- Hatch pattern for RL outcome -->
+    <pattern id="hatch-rl" patternUnits="userSpaceOnUse" width="6" height="6" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="#fff"/>
+      <line x1="0" y1="0" x2="0" y2="6" stroke="#555" stroke-width="1.8"/>
+    </pattern>
+    <!-- Dot pattern for Hybrid outcome -->
+    <pattern id="dot-hybrid" patternUnits="userSpaceOnUse" width="7" height="7">
+      <rect width="7" height="7" fill="#fff"/>
+      <circle cx="3.5" cy="3.5" r="1.2" fill="#444"/>
+    </pattern>
+    <!-- Cross-hatch for E2E -->
+    <pattern id="cross-e2e" patternUnits="userSpaceOnUse" width="8" height="8" patternTransform="rotate(0)">
+      <rect width="8" height="8" fill="#fff"/>
+      <line x1="0" y1="4" x2="8" y2="4" stroke="#888" stroke-width="1.2"/>
+      <line x1="4" y1="0" x2="4" y2="8" stroke="#888" stroke-width="1.2"/>
+    </pattern>
+
+    <!-- Drop shadow filter -->
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="114%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#00000022"/>
+    </filter>
+  </defs>
+
+  <!-- ═══════════════════════════════════════════════
+       BACKGROUND
+  ═══════════════════════════════════════════════ -->
+  <rect width="860" height="1680" fill="#ffffff"/>
+
+  <!-- ═══════════════════════════════════════════════
+       TITLE BLOCK
+  ═══════════════════════════════════════════════ -->
+  <rect x="30" y="18" width="800" height="58" rx="3" fill="#111" filter="url(#shadow)"/>
+  <text x="430" y="42" text-anchor="middle" fill="#fff" font-size="15" font-weight="bold" letter-spacing="0.5">AUTONOMOUS DRIVING ARCHITECTURE SELECTION FRAMEWORK</text>
+  <text x="430" y="62" text-anchor="middle" fill="#bbb" font-size="10.5" font-style="italic">A Multi-Dimensional Decision Framework for Architecture Paradigm Selection</text>
+
+  <!-- ═══════════════════════════════════════════════
+       START NODE
+  ═══════════════════════════════════════════════ -->
+  <ellipse cx="430" cy="118" rx="90" ry="22" fill="#333" stroke="#111" stroke-width="1.5"/>
+  <text x="430" y="123" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold">START: Define System Requirements</text>
+
+  <!-- Arrow: START → DIM1 -->
+  <line x1="430" y1="140" x2="430" y2="158" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ═══════════════════════════════════════════════
+       DIMENSION 1: SAFETY & REGULATION
+  ═══════════════════════════════════════════════ -->
+  <!-- Dim label bar -->
+  <rect x="30" y="160" width="800" height="26" rx="2" fill="#2a2a2a"/>
+  <text x="430" y="178" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold" letter-spacing="1">DIMENSION 1 — SAFETY &amp; REGULATORY COMPLIANCE</text>
+
+  <!-- Q1 Diamond -->
+  <!-- cx=430, cy=238 -->
+  <polygon points="430,205 540,238 430,271 320,238" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="232" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q1: Is full decision traceability</text>
+  <text x="430" y="245" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">a hard requirement?</text>
+  <text x="430" y="256" text-anchor="middle" font-size="9" fill="#555">(ISO 26262, UNECE WP.29)</text>
+
+  <!-- Q1 → YES label (left) -->
+  <line x1="320" y1="238" x2="180" y2="238" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="224" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="235" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <!-- Modular signal box -->
+  <rect x="82" y="224" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="236" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Strong Signal:</text>
+  <text x="131" y="248" text-anchor="middle" font-size="9" fill="#111">Modular / Hybrid</text>
+
+  <!-- Q1 → NO (down) -->
+  <line x1="430" y1="271" x2="430" y2="289" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="273" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="283" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- Q2 Diamond -->
+  <polygon points="430,291 540,324 430,357 320,324" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="318" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q2: Is per-module failure</text>
+  <text x="430" y="331" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">isolation critical?</text>
+  <text x="430" y="342" text-anchor="middle" font-size="9" fill="#555">(field debugging, SOTIF)</text>
+
+  <!-- Q2 YES → left signal -->
+  <line x1="320" y1="324" x2="180" y2="324" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="310" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="321" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="82" y="310" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="322" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="131" y="334" text-anchor="middle" font-size="9" fill="#111">Modular</text>
+
+  <!-- Q2 NO → down -->
+  <line x1="430" y1="357" x2="430" y2="375" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="359" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="369" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- Q3 Diamond -->
+  <polygon points="430,377 540,410 430,443 320,410" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="404" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q3: Is ASIL-C/D or</text>
+  <text x="430" y="417" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">equivalent required?</text>
+  <text x="430" y="428" text-anchor="middle" font-size="9" fill="#555">(redundancy mandated)</text>
+
+  <!-- Q3 YES → left signal -->
+  <line x1="320" y1="410" x2="180" y2="410" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="396" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="407" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="82" y="396" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="408" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Strongly Favours:</text>
+  <text x="131" y="420" text-anchor="middle" font-size="9" fill="#111">Modular</text>
+
+  <!-- Q3 NO → down to DIM2 -->
+  <line x1="430" y1="443" x2="430" y2="461" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="445" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="455" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- ═══════════════════════════════════════════════
+       DIMENSION 2: ENVIRONMENT
+  ═══════════════════════════════════════════════ -->
+  <rect x="30" y="463" width="800" height="26" rx="2" fill="#333"/>
+  <text x="430" y="481" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold" letter-spacing="1">DIMENSION 2 — OPERATING ENVIRONMENT</text>
+
+  <!-- Q4 Diamond -->
+  <polygon points="430,509 540,542 430,575 320,542" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="536" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q4: Is the primary ODD</text>
+  <text x="430" y="549" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">highly structured?</text>
+  <text x="430" y="560" text-anchor="middle" font-size="9" fill="#555">(highway, geofenced, industrial)</text>
+
+  <!-- Q4 YES right -->
+  <line x1="540" y1="542" x2="680" y2="542" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="528" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="539" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="682" y="528" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="540" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="731" y="552" text-anchor="middle" font-size="9" fill="#111">Modular</text>
+
+  <!-- Q4 NO → down -->
+  <line x1="430" y1="575" x2="430" y2="593" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="577" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="587" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- Q5 Diamond -->
+  <polygon points="430,595 540,628 430,661 320,628" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="622" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q5: Are long-tail / OOD</text>
+  <text x="430" y="635" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">scenarios frequent?</text>
+  <text x="430" y="646" text-anchor="middle" font-size="9" fill="#555">(edge cases, novel environments)</text>
+
+  <!-- Q5 YES right -->
+  <line x1="540" y1="628" x2="680" y2="628" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="614" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="625" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="682" y="614" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="626" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="731" y="638" text-anchor="middle" font-size="9" fill="#111">E2E / Hybrid</text>
+
+  <!-- Q5 NO → down -->
+  <line x1="430" y1="661" x2="430" y2="679" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="663" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="673" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- Q6 Diamond -->
+  <polygon points="430,681 540,714 430,747 320,714" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="708" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q6: Is multi-agent density</text>
+  <text x="430" y="721" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">high and unpredictable?</text>
+  <text x="430" y="732" text-anchor="middle" font-size="9" fill="#555">(dense urban, cyclists, pedestrians)</text>
+
+  <!-- Q6 YES right -->
+  <line x1="540" y1="714" x2="680" y2="714" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="700" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="711" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="682" y="700" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="712" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="731" y="724" text-anchor="middle" font-size="9" fill="#111">E2E / RL</text>
+
+  <!-- Q6 NO → dim3 -->
+  <line x1="430" y1="747" x2="430" y2="765" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="749" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="759" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- ═══════════════════════════════════════════════
+       DIMENSION 3: DATA & RESOURCES
+  ═══════════════════════════════════════════════ -->
+  <rect x="30" y="767" width="800" height="26" rx="2" fill="#444"/>
+  <text x="430" y="785" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold" letter-spacing="1">DIMENSION 3 — DATA &amp; COMPUTATIONAL RESOURCES</text>
+
+  <!-- Q7 Diamond -->
+  <polygon points="430,813 540,846 430,879 320,846" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="840" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q7: Is large-scale labeled</text>
+  <text x="430" y="853" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">training data available?</text>
+  <text x="430" y="864" text-anchor="middle" font-size="9" fill="#555">(&gt;100k annotated scenarios)</text>
+
+  <!-- Q7 YES right -->
+  <line x1="540" y1="846" x2="680" y2="846" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="832" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="843" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="682" y="832" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="844" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="731" y="856" text-anchor="middle" font-size="9" fill="#111">E2E (IL)</text>
+
+  <!-- Q7 NO (left) -->
+  <line x1="320" y1="846" x2="180" y2="846" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="832" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="843" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+  <rect x="82" y="832" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="844" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="131" y="856" text-anchor="middle" font-size="9" fill="#111">Modular / RL</text>
+
+  <!-- Q7 → down (partial) -->
+  <line x1="430" y1="879" x2="430" y2="897" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Q8 Diamond -->
+  <polygon points="430,899 540,932 430,965 320,932" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="926" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q8: Is high-fidelity</text>
+  <text x="430" y="939" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">simulation available?</text>
+  <text x="430" y="950" text-anchor="middle" font-size="9" fill="#555">(CARLA, LGSVL, photorealistic)</text>
+
+  <!-- Q8 YES right -->
+  <line x1="540" y1="932" x2="680" y2="932" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="918" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="929" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="682" y="918" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="930" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Enables:</text>
+  <text x="731" y="942" text-anchor="middle" font-size="9" fill="#111">RL Training</text>
+
+  <!-- Q8 NO left -->
+  <line x1="320" y1="932" x2="180" y2="932" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="918" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="929" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+  <rect x="82" y="918" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="930" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Limits to:</text>
+  <text x="131" y="942" text-anchor="middle" font-size="9" fill="#111">Modular / IL</text>
+
+  <!-- Q8 → down -->
+  <line x1="430" y1="965" x2="430" y2="983" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Q9 Diamond -->
+  <polygon points="430,985 540,1018 430,1051 320,1018" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="1012" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q9: Is onboard compute</text>
+  <text x="430" y="1025" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">tightly constrained?</text>
+  <text x="430" y="1036" text-anchor="middle" font-size="9" fill="#555">(embedded ≤15W, no discrete GPU)</text>
+
+  <!-- Q9 YES left -->
+  <line x1="320" y1="1018" x2="180" y2="1018" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="1004" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="1015" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="82" y="1004" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="1016" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Strongly Favours:</text>
+  <text x="131" y="1028" text-anchor="middle" font-size="9" fill="#111">Modular</text>
+
+  <!-- Q9 NO right -->
+  <line x1="540" y1="1018" x2="680" y2="1018" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="1004" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="1015" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+  <rect x="682" y="1004" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="1016" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Opens:</text>
+  <text x="731" y="1028" text-anchor="middle" font-size="9" fill="#111">E2E / Hybrid</text>
+
+  <!-- Q9 → down to DIM4 -->
+  <line x1="430" y1="1051" x2="430" y2="1069" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ═══════════════════════════════════════════════
+       DIMENSION 4: DEPLOYMENT
+  ═══════════════════════════════════════════════ -->
+  <rect x="30" y="1071" width="800" height="26" rx="2" fill="#555"/>
+  <text x="430" y="1089" text-anchor="middle" fill="#fff" font-size="11" font-weight="bold" letter-spacing="1">DIMENSION 4 — DEPLOYMENT &amp; OPERATIONAL CONTEXT</text>
+
+  <!-- Q10 Diamond -->
+  <polygon points="430,1117 540,1150 430,1183 320,1150" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="1144" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q10: Is this a production</text>
+  <text x="430" y="1157" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">or certified deployment?</text>
+  <text x="430" y="1168" text-anchor="middle" font-size="9" fill="#555">(vs. research / prototype)</text>
+
+  <!-- Q10 YES left -->
+  <line x1="320" y1="1150" x2="180" y2="1150" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="1136" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="1147" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="82" y="1136" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="1148" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="131" y="1160" text-anchor="middle" font-size="9" fill="#111">Modular / Hybrid</text>
+
+  <!-- Q10 NO right -->
+  <line x1="540" y1="1150" x2="680" y2="1150" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="1136" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="1147" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+  <rect x="682" y="1136" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="1148" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Enables:</text>
+  <text x="731" y="1160" text-anchor="middle" font-size="9" fill="#111">RL / E2E</text>
+
+  <!-- Q10 → down -->
+  <line x1="430" y1="1183" x2="430" y2="1201" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Q11 Diamond -->
+  <polygon points="430,1203 540,1236 430,1269 320,1236" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="1230" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q11: Are independent module</text>
+  <text x="430" y="1243" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">updates required?</text>
+  <text x="430" y="1254" text-anchor="middle" font-size="9" fill="#555">(swap perception w/o full retrain)</text>
+
+  <!-- Q11 YES left -->
+  <line x1="320" y1="1236" x2="180" y2="1236" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="1222" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="1233" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="82" y="1222" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="1234" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="131" y="1246" text-anchor="middle" font-size="9" fill="#111">Modular</text>
+
+  <!-- Q11 NO → down -->
+  <line x1="430" y1="1269" x2="430" y2="1287" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <rect x="396" y="1271" width="28" height="15" rx="2" fill="#111"/>
+  <text x="410" y="1281" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+
+  <!-- Q12 Diamond -->
+  <polygon points="430,1289 540,1322 430,1355 320,1322" fill="#fff" stroke="#222" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="1316" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">Q12: Does team have</text>
+  <text x="430" y="1329" text-anchor="middle" font-size="10" font-weight="bold" fill="#111">cross-functional expertise?</text>
+  <text x="430" y="1340" text-anchor="middle" font-size="9" fill="#555">(controls + deep learning)</text>
+
+  <!-- Q12 YES right -->
+  <line x1="540" y1="1322" x2="680" y2="1322" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="560" y="1308" width="46" height="15" rx="2" fill="#111"/>
+  <text x="583" y="1319" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">YES</text>
+  <rect x="682" y="1308" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="731" y="1320" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Enables:</text>
+  <text x="731" y="1332" text-anchor="middle" font-size="9" fill="#111">Hybrid</text>
+
+  <!-- Q12 NO left -->
+  <line x1="320" y1="1322" x2="180" y2="1322" stroke="#444" stroke-width="1.2" marker-end="url(#arrow-sm)"/>
+  <rect x="196" y="1308" width="46" height="15" rx="2" fill="#111"/>
+  <text x="219" y="1319" text-anchor="middle" fill="#fff" font-size="9" font-weight="bold">NO</text>
+  <rect x="82" y="1308" width="98" height="28" rx="3" fill="#e0e0e0" stroke="#222" stroke-width="1.2"/>
+  <text x="131" y="1320" text-anchor="middle" font-size="9" font-weight="bold" fill="#111">→ Favours:</text>
+  <text x="131" y="1332" text-anchor="middle" font-size="9" fill="#111">Modular or E2E</text>
+
+  <!-- Arrow Q12 → Aggregation -->
+  <line x1="430" y1="1355" x2="430" y2="1373" stroke="#222" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ═══════════════════════════════════════════════
+       SCORE AGGREGATION NODE
+  ═══════════════════════════════════════════════ -->
+  <rect x="290" y="1375" width="280" height="36" rx="4" fill="#222" stroke="#111" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="430" y="1389" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="bold">AGGREGATE DIMENSIONAL SIGNALS</text>
+  <text x="430" y="1403" text-anchor="middle" fill="#aaa" font-size="9">Tally votes per architecture across all 12 criteria</text>
+
+  <!-- Arrows from aggregation to 4 outcomes -->
+  <!-- Modular: left -->
+  <line x1="290" y1="1393" x2="152" y2="1455" stroke="#222" stroke-width="1.5" marker-end="url(#arrow-out)"/>
+  <!-- E2E: center-left -->
+  <line x1="380" y1="1411" x2="310" y2="1455" stroke="#222" stroke-width="1.5" marker-end="url(#arrow-out)"/>
+  <!-- RL: center-right -->
+  <line x1="480" y1="1411" x2="550" y2="1455" stroke="#222" stroke-width="1.5" marker-end="url(#arrow-out)"/>
+  <!-- Hybrid: right -->
+  <line x1="570" y1="1393" x2="708" y2="1455" stroke="#222" stroke-width="1.5" marker-end="url(#arrow-out)"/>
+
+  <!-- ═══════════════════════════════════════════════
+       OUTCOME NODES
+  ═══════════════════════════════════════════════ -->
+
+  <!-- MODULAR -->
+  <rect x="48" y="1457" width="148" height="100" rx="5" fill="#f0f0f0" stroke="#111" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="48" y="1457" width="148" height="22" rx="5" fill="#111"/>
+  <rect x="48" y="1467" width="148" height="12" rx="0" fill="#111"/><!-- cap bottom corners -->
+  <text x="122" y="1472" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="bold">MODULAR</text>
+  <text x="122" y="1490" text-anchor="middle" font-size="8.5" fill="#222">Safety-critical, certified</text>
+  <text x="122" y="1502" text-anchor="middle" font-size="8.5" fill="#222">Structured ODD</text>
+  <text x="122" y="1514" text-anchor="middle" font-size="8.5" fill="#222">Embedded compute</text>
+  <text x="122" y="1526" text-anchor="middle" font-size="8.5" fill="#222">e.g. Highway ADAS (L2/L3)</text>
+  <text x="122" y="1548" text-anchor="middle" font-size="8" fill="#555" font-style="italic">ISO 26262, SOTIF compatible</text>
+
+  <!-- E2E -->
+  <rect x="220" y="1457" width="148" height="100" rx="5" fill="url(#cross-e2e)" stroke="#111" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="220" y="1457" width="148" height="22" rx="5" fill="#333"/>
+  <rect x="220" y="1467" width="148" height="12" fill="#333"/>
+  <text x="294" y="1472" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="bold">END-TO-END (IL)</text>
+  <text x="294" y="1490" text-anchor="middle" font-size="8.5" fill="#111">Large labeled dataset</text>
+  <text x="294" y="1502" text-anchor="middle" font-size="8.5" fill="#111">Unstructured ODD</text>
+  <text x="294" y="1514" text-anchor="middle" font-size="8.5" fill="#111">High compute budget</text>
+  <text x="294" y="1526" text-anchor="middle" font-size="8.5" fill="#111">e.g. Off-road, open city</text>
+  <text x="294" y="1548" text-anchor="middle" font-size="8" fill="#555" font-style="italic">Imitation learning pipeline</text>
+
+  <!-- RL -->
+  <rect x="492" y="1457" width="148" height="100" rx="5" fill="url(#hatch-rl)" stroke="#111" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="492" y="1457" width="148" height="22" rx="5" fill="#444"/>
+  <rect x="492" y="1467" width="148" height="12" fill="#444"/>
+  <text x="566" y="1472" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="bold">REINFORCEMENT L.</text>
+  <text x="566" y="1490" text-anchor="middle" font-size="8.5" fill="#111">Sim available, no labels</text>
+  <text x="566" y="1502" text-anchor="middle" font-size="8.5" fill="#111">Research / exploration</text>
+  <text x="566" y="1514" text-anchor="middle" font-size="8.5" fill="#111">Continuous control output</text>
+  <text x="566" y="1526" text-anchor="middle" font-size="8.5" fill="#111">e.g. Racing, sim-only</text>
+  <text x="566" y="1548" text-anchor="middle" font-size="8" fill="#555" font-style="italic">Reward function design critical</text>
+
+  <!-- HYBRID -->
+  <rect x="664" y="1457" width="148" height="100" rx="5" fill="url(#dot-hybrid)" stroke="#111" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="664" y="1457" width="148" height="22" rx="5" fill="#222"/>
+  <rect x="664" y="1467" width="148" height="12" fill="#222"/>
+  <text x="738" y="1472" text-anchor="middle" fill="#fff" font-size="10.5" font-weight="bold">HYBRID</text>
+  <text x="738" y="1490" text-anchor="middle" font-size="8.5" fill="#111">Mixed ODD, moderate data</text>
+  <text x="738" y="1502" text-anchor="middle" font-size="8.5" fill="#111">Partial interpretability</text>
+  <text x="738" y="1514" text-anchor="middle" font-size="8.5" fill="#111">Cross-functional team</text>
+  <text x="738" y="1526" text-anchor="middle" font-size="8.5" fill="#111">e.g. Urban robotaxi (L4)</text>
+  <text x="738" y="1548" text-anchor="middle" font-size="8" fill="#555" font-style="italic">Modular percept. + E2E plan.</text>
+
+  <!-- ═══════════════════════════════════════════════
+       LEGEND BOX (bottom)
+  ═══════════════════════════════════════════════ -->
+  <rect x="30" y="1572" width="800" height="60" rx="3" fill="#f9f9f9" stroke="#ccc" stroke-width="1"/>
+  <text x="44" y="1589" font-size="9" font-weight="bold" fill="#333">LEGEND:</text>
+
+  <!-- Decision diamond -->
+  <polygon points="100,1600 116,1611 100,1622 84,1611" fill="#fff" stroke="#222" stroke-width="1.2"/>
+  <text x="120" y="1615" font-size="8.5" fill="#333">Decision criterion</text>
+
+  <!-- Signal box -->
+  <rect x="220" y="1603" width="70" height="16" rx="2" fill="#e0e0e0" stroke="#222" stroke-width="1"/>
+  <text x="255" y="1614" text-anchor="middle" font-size="8.5" fill="#333">→ Architecture signal</text>
+
+  <!-- YES/NO label -->
+  <rect x="340" y="1603" width="28" height="15" rx="2" fill="#111"/>
+  <text x="354" y="1614" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="bold">YES</text>
+  <text x="376" y="1614" font-size="8.5" fill="#333">/ </text>
+  <rect x="380" y="1603" width="24" height="15" rx="2" fill="#111"/>
+  <text x="392" y="1614" text-anchor="middle" fill="#fff" font-size="8.5" font-weight="bold">NO</text>
+  <text x="412" y="1614" font-size="8.5" fill="#333">Answer labels</text>
+
+  <!-- Outcome patterns legend -->
+  <rect x="510" y="1603" width="16" height="16" fill="#f0f0f0" stroke="#111" stroke-width="1"/>
+  <text x="530" y="1614" font-size="8.5" fill="#333">Modular</text>
+  <rect x="578" y="1603" width="16" height="16" fill="url(#cross-e2e)" stroke="#111" stroke-width="1"/>
+  <text x="598" y="1614" font-size="8.5" fill="#333">E2E</text>
+  <rect x="626" y="1603" width="16" height="16" fill="url(#hatch-rl)" stroke="#111" stroke-width="1"/>
+  <text x="646" y="1614" font-size="8.5" fill="#333">RL</text>
+  <rect x="674" y="1603" width="16" height="16" fill="url(#dot-hybrid)" stroke="#111" stroke-width="1"/>
+  <text x="694" y="1614" font-size="8.5" fill="#333">Hybrid</text>
+
+  <!-- Dim bar legend -->
+  <rect x="44" y="1625" width="200" height="1.5" fill="#333"/>
+  <text x="250" y="1632" font-size="8.5" fill="#555" font-style="italic">Questions flow top-to-bottom; lateral branches indicate architecture signals per answer.</text>
+  <text x="250" y="1645" font-size="8.5" fill="#555" font-style="italic">Final selection = architecture with highest accumulated signal count across all 4 dimensions.</text>
+
+  <!-- ═══════════════════════════════════════════════
+       FIGURE CAPTION
+  ═══════════════════════════════════════════════ -->
+  <line x1="30" y1="1638" x2="30" y2="1665" stroke="#ccc" stroke-width="0.5"/>
+
+</svg>
